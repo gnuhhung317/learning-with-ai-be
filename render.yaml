@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: learning-quiz-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: GEMINI_API_KEY
+        sync: false
+    healthCheckPath: /
+    autoDeploy: true
+    branch: master
+    repo: https://github.com/gnuhhung317/learning-with-ai-be
