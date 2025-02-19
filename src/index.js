@@ -22,6 +22,29 @@ const upload = multer({
   }
 });
 
+// Quiz generation from topic endpoint
+app.post('/api/quiz', async (req, res) => {
+  try {
+    const { topic, level = 'beginner', numberOfQuestions = 5 } = req.body;
+
+    if (!topic) {
+      return res.status(400).json({ error: 'Topic is required' });
+    }
+
+    const quizService = new QuizService();
+    const questions = await quizService.generateQuestionsFromAI({
+      topic,
+      level,
+      numberOfQuestions
+    });
+
+    res.json({ questions });
+  } catch (error) {
+    console.error('Error generating quiz:', error);
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
 // Quiz generation from PDF endpoint
 app.post('/api/quiz/pdf', upload.single('file'), async (req, res) => {
   try {
