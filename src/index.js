@@ -5,6 +5,10 @@ const path = require('path');
 const dotenv = require('dotenv');
 const { PDFService } = require('./services/pdf-service');
 const { QuizService } = require('./services/quiz-service');
+const quizRoutes = require('./routes/quizzes');
+const questionRoutes = require('./routes/questions');
+const promptTemplateRoutes = require('./routes/prompt-templates');
+const groupRoutes = require('./routes/groups');
 
 dotenv.config();
 
@@ -14,6 +18,12 @@ const port = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Application routes for quiz management
+app.use('/api/quizzes', quizRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/prompt-templates', promptTemplateRoutes);
+app.use('/api/groups', groupRoutes);
 
 // Configure multer for file upload
 const upload = multer({
