@@ -61,13 +61,30 @@ class QuizService {
 
   async generateQuestionsFromAI(params) {
     try {
+      // Map Bloom's level to Vietnamese descriptions for prompt
+      const bloomDescriptions = {
+        remember: "nhớ lại và ghi nhớ thông tin, sự kiện, khái niệm",
+        understand: "hiểu và giải thích ý nghĩa, diễn giải thông tin",
+        apply: "áp dụng kiến thức vào tình huống thực tế hoặc bài toán cụ thể",
+        analyze: "phân tích, chia nhỏ thông tin và xem xét mối quan hệ giữa các phần",
+        evaluate: "đánh giá, phê phán và đưa ra phán đoán có căn cứ",
+        create: "tạo ra, tổng hợp và xây dựng cái mới từ các yếu tố đã có"
+      };
+
+      const bloomInstruction = params.bloomLevel && bloomDescriptions[params.bloomLevel] 
+        ? `Câu hỏi cần tập trung vào mức độ tư duy "${params.bloomLevel}" - ${bloomDescriptions[params.bloomLevel]}.`
+        : "";
+      debugger
       const prompt = `
         Tạo ${params.numberOfQuestions} câu hỏi trắc nghiệm về chủ đề ${params.topic} ở trình độ ${params.level}.
+        ${bloomInstruction}
+        
         Mỗi câu hỏi cần:
         - Rõ ràng và súc tích
         - Có đúng 4 lựa chọn
         - Có một đáp án đúng
         - Bao gồm giải thích cho đáp án đúng
+        - Phù hợp với mức độ tư duy được yêu cầu
 
         Trả về kết quả theo định dạng JSON sau:
         {
